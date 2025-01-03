@@ -2,24 +2,60 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Models\usuarios;
 use Illuminate\Http\Request;
 
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\PaginaController;
 
 class ValidaLoginController extends Controller
 {
-      public function store(Request $request){
-           $login = $request->input('login');  // Acessa o valor do campo 'login'
-           $senha = $request->input('senha');  // Acessa o valor do campo 'senha'
+      public function store(LoginRequest $request){
 
-            $this->validar($login,$senha);
-     }
+        //dd($request);
+         //valido os campos
+        $login = $request->input('login');  // Acessa o valor do campo 'login'
+        $senha = $request->input('password');  // Acessa o valor do campo 'senha'
+        $this->validar($request);
+  }
 
-     public function validar($login,$senha){
+     public function validar($request){
+
+        //$request->validated();
+
+       //  $autnheicado = Auth::guard('custom_guard')->attempt(['UserLogin' => $request->login]);
+         $autnheicado = usuarios::where(['UserLogin' => $request->login])->first();
+
+         //dd($autnheicado);
+
+         if($autnheicado && Hash::check($request->password, $autnheicado->hasPhp)){
+
+            Auth::guard('custom_guard')->attempt(['UserLogin' => $request->password]);
+
+            $userAuth =  true;
+        //    dd('autenticado');
+
+           return view('pagina.index');
+
+        }else{
+
+   //dd('náo autenticado');
+   return redirect()->back()->withErrors(['login' => 'Credenciais inválidas']);
+ // Se as credenciais forem inválidas, redireciona de volta com erro
+ //
+
+        }
+
+            // dd('achei');
+
+         }
 
         //chamo a model do banco para validar login
-  //get para pegar os dados do banco
-
+      //get para pegar os dados do banco
+ /*
 
        $resultUser = usuarios::where('UserLogin', $login)->get();
 
@@ -34,10 +70,7 @@ class ValidaLoginController extends Controller
             return redirect('index')->with('msg', 'Credenciais incorretas')->withInput();
 
      }
+            */
     }
 
-     public function index(){
 
-        return view('index');
-     }
-}

@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'custom_guard' => [
+        'driver' => 'session',
+        'provider' => 'tb_users', // Nome do provider
+    ],
     ],
 
     /*
@@ -65,10 +70,11 @@ return [
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'tb_users' => [
+             'driver' => 'database',
+             'table' => 'tb_users',
+             'model' => App\Models\usuarios::class,
+         ],
     ],
 
     /*
