@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AssSistemaController;
+use App\Http\Controllers\FuncoesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ValidaLoginController;
 use App\Http\Controllers\HomeController;
@@ -10,7 +11,9 @@ Route::get('/', [HomeController::class, 'index'])->name('login.index-login');
 
 //Route::post('/', [ValidaLoginController::class, 'store']);
 
-//Route::get('/index-lista',[PaginaController::class, 'index'])->name('pagina.index');
+Route::get('/ctosCadastro',[PaginaController::class, 'ctosCad'])->name('paginas.ctosCadastros');
+
+Route::post('/processarRotas',[FuncoesController::class, 'cadCidade'])->name('processarRotas');
 
 Route::post('/processar',[HomeController::class, 'loginProcess'])->name('login.processar');
 

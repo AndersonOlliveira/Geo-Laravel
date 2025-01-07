@@ -1,7 +1,7 @@
 var MvcController = new function () {
     this.Call = function Call(_type, _url, _dataType, _param, _method) {
-        StartLoad();
-        $.ajax({
+        CarregaCidades();
+       $.ajax({
             type: _type,
             url: _url,
             cache: false,
@@ -16,7 +16,7 @@ var MvcController = new function () {
     }
 };
 
- function CarregaCidades() {
+  function CarregaCidades() {
         $.ajax({
             url: 'api/cidade',  // Rota criada em Laravel
             type: 'GET',
@@ -24,15 +24,22 @@ var MvcController = new function () {
 
             success: function(response) {
                 if (response.Status == 2) {
-                    console.log(response.message);
+
+
+                   // console.log(response.message);
+
+                     liberaEstado(response.message);
+
+
+
                     $('#selectCidade').append($('<option>', { value: '', text: 'Todas as Cidades' }));
                     // Adiciona as outras opções
 
-                    $.each(response.message, function (i, item) {
+                   //  $.each(response.message, function (i, item) {
 
 
-                        $('#selectCidade').append($('<option>', { value: item.id, text: item.cidade }));
-                    });
+                     //   $('#selectCidade').append($('<option>', { value: item.id, text: item.cidade }));
+                   // });
                 } else {
                    // alert(response.Result);
                 }
@@ -44,7 +51,66 @@ var MvcController = new function () {
     }
 
     // Chama a função quando a página for carregada
+
     $(document).ready(function() {
         CarregaCidades();
     });
 
+
+    function liberaEstado(response){
+
+        populateUFSelect(response);
+
+
+    }
+
+    // Função para popular o dropdown de estados
+  function populateUFSelect(response) {
+
+     var ufSelect = document.getElementById('uf');
+     var ufSet = new Set();
+
+     response.forEach(function(item) {
+         ufSet.add(item.uf);
+      });
+
+       ufSet.forEach(function(uf) {
+         var option = document.createElement('option');
+
+         option.value = uf;
+         option.text = uf;
+         ufSelect.add(option);
+         });
+ }
+ // Função para popular o dropdown de cidades
+ function populateCidadeSelect(uf) {
+
+    if(uf.length >0 ){
+
+
+
+
+     var cidadeSelect = document.getElementById('selectCidade');
+     cidadeSelect.innerHTML = "<option selected>Selecione a Cidade</option>";
+
+     response.forEach(function(item) {
+        // console.log(uf);
+         if (item.uf == uf) {
+             var option = document.createElement('option');
+             option.value = item.cidade;
+             option.text = item.cidade;
+             cidadeSelect.add(option);
+         }
+     });
+    }
+ }
+
+
+ document.addEventListener('DOMContentLoaded', function() {
+       //populateUFSelect(response.message);
+
+     document.getElementById('uf').addEventListener('change', function() {
+      var selectedUF = this.value;
+        populateCidadeSelect(selectedUF);
+     });
+ });

@@ -24,35 +24,66 @@ class HomeController extends Controller
          //valido os campos
         $login = $request->input('login');  // Acessa o valor do campo 'login'
         $senha = $request->input('password');  // Acessa o valor do campo 'senha'
-        $this->validar($request);
+         $retorno = $this->validar($request);
+
+        //dd($retorno);
+         // precisa do return para aparecer o dado que precisa ser validado;
+          return $retorno;
   }
 
      public function validar($request){
 
-        $request->validated();
+        //dd($request->validated());
+         //dd("estou no validar");
+         //attempt precisa enviar uma array
+        //$autnheicado = Auth::guard('custom_guard')->attempt(['UserLogin' => $request->login, "hasPhp" => $request->password]);
+         //este código abaixo ele faz uma busca no banco
 
-       //  $autnheicado = Auth::guard('custom_guard')->attempt(['UserLogin' => $request->login]);
-         $autnheicado = usuarios::where(['UserLogin' => $request->login])->first();
+         $veriAuth = usuarios::where(['UserLogin' => $request->login])->first();
+         //dd($veriAuth);
+
+          if($veriAuth->count() > 0){
+
+             //dd($veriAuth);
+                 $veriPass = Hash::check($request->password, $veriAuth->hasPhp);
+
+             if(!$veriPass){
+
+                return back()->withInput()->with('msg', 'Login ou senha invalidos');
+
+               }else{
+
+                 return redirect()->route('indexAss');
+             }
+
+        }else{
+
+            return back()->withInput()->with('msg', 'Login ou senha invalidos');
 
 
-         if($autnheicado && Hash::check($request->senha, $autnheicado->hasPhp)){
+        }
 
-             Auth::guard('custom_guard')->attempt(['UserLogin' => $request->password]);
+         //if($autnheicado && $testeAut){
 
-          // dd($aut);
+             //$validado = Auth::guard('custom_guard')->attempt(['UserLogin' => $request->login, 'hasPhp' => $autnheicado->hasPhp]);
+
+               //$validado = Auth::guard('custom_guard')->login(['UserLogin' => $request->login]);
+
+                 //dd('sai aqui');
+            //     return redirect()->route('indexAss');
+
+          //}
+         // dd('cai aqu');
+
+          //else{
 
 
-
-      }else{
-        // dd('autenticado');
-        //dd($_SERVER['REQUEST_URI']);
-        if($_SERVER['REQUEST_URI'] == '/processar'){
+            //  dd('autenticado');
 
             //dd($_SERVER['REQUEST_URI'] = '/login');
-            return redirect()->route('login.index-login');
 
-        }
-        }
+
+  // }
 }
 }
 

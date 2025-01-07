@@ -12,14 +12,14 @@
               Login
             </div>
             <div class="card-body">
-              <form id="formulario" action="{{route('login.processar')}}" method="post"> <!--para onde eu vou enviar o post de preenchimento do formulario -->
+              <form id="formulario" action="{{route('login.processar')}}" method="POST"> <!--para onde eu vou enviar o post de preenchimento do formulario -->
                 @csrf
-                @method('POST')
+
                 <div class="form-group">
                   <input name="login" type="text" class="form-control"  autocomplete="on" required="" >
                 </div>
                 <div class="form-group">
-                  <input name="senha" type="password"  autocomplete="current-password" class="form-control" placeholder="Senha"></div>
+                  <input name="password" type="password"  autocomplete="current-password" class="form-control" placeholder="Senha"></div>
                <div class="text-danger">
 
                  </div>
@@ -30,6 +30,9 @@
                     <div class="row">
                 <div class="row">
                 <div class="col-sm">
+                    @if(session('msg'))
+                       <p> {{session('msg')}} </p>
+                    @endif
                   <a style="position: fixed;"  href="alterarSenha.php">Esqueceu a senha?</a>
                 </div>
                 </div>

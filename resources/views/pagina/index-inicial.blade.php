@@ -4,5 +4,5 @@
 @section('title', 'Login')
 
 @section('content')
-dasdasdasdas
+
 @endsection
